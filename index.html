@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Electric Budget – Protótipo</title>
+
+<link href="style.css" rel="stylesheet"/></head>
+<body>
+<div class="phone">
+<!-- ===== HOME ===== -->
+<div class="screen active" id="screen-home">
+<div class="topbar">
+<div class="topbar-row">
+<span class="topbar-title">Electric Budget</span>
+<span class="bell-icon">🔔</span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="quick-btns">
+<div class="quick-btn" onclick="goTo('screen-clientes')">CLIENTES</div>
+<div class="quick-btn" onclick="goTo('screen-materiais')">MATERIAIS</div>
+</div>
+<div class="section-header">
+<span class="section-label">Minha Agenda</span>
+<span class="section-link" onclick="goTo('screen-agenda')">VER TODOS</span>
+</div>
+<div class="sub-label">HOJE</div>
+<div class="agenda-card">
+<div class="horario">08:00</div>
+<div class="cliente-name">Carlos Mendonça</div>
+<div class="descricao">Instalação de quadro elétrico</div>
+</div>
+<div class="sub-label">ESTA SEMANA</div>
+<div class="agenda-card">
+<div class="horario">Qui, 14:00</div>
+<div class="cliente-name">Maria Aparecida</div>
+<div class="descricao">Revisão geral – 3 cômodos</div>
+</div>
+<div class="section-header">
+<span class="section-label">Orçamentos</span>
+<span class="section-link">VER TODOS</span>
+</div>
+<div class="orc-row">
+<div class="orc-chip pendente" onclick="goTo('screen-orcamento')">3 PENDENTES</div>
+<div class="orc-chip aguardando" onclick="goTo('screen-orcamento')">2 AGUARDANDO APROVAÇÃO</div>
+</div>
+<div class="section-header" style="margin-top:20px;">
+<span class="section-label">Pagamentos</span>
+</div>
+<div class="pay-home-box">
+<div class="pay-today-row">
+<span>A RECEBER HOJE:</span>
+<span class="valor">R$ 850,00</span>
+</div>
+<div class="pay-row" onclick="goTo('screen-pagamentos')">
+<span class="pnome">Carlos Mendonça</span>
+<span class="pvalor">R$ 580,00</span>
+</div>
+<div class="pay-row" onclick="goTo('screen-pagamentos')">
+<span class="pnome">Fernanda Rocha</span>
+<span class="pvalor">R$ 270,00</span>
+</div>
+</div>
+<div class="scroll-indicator">▽</div>
+<div style="height:16px;"></div>
+</div>
+<div class="bottom-bar">
+<div class="bottom-action" onclick="goTo('screen-agenda')">
+<div class="fab">+</div>
+<div class="fab-label">Agendar</div>
+</div>
+<div class="bottom-action" onclick="goTo('screen-orcamento')">
+<div class="fab">+</div>
+<div class="fab-label">Novo<br/>Orçamento</div>
+</div>
+</div>
+</div>
+<!-- ===== PAGAMENTOS ===== -->
+<div class="screen" id="screen-pagamentos">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<span class="topbar-title">Pagamentos</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="section-label" style="margin-bottom:10px;">PAGAMENTOS</div>
+<div class="pay-summary-row">
+<div class="pay-summary-card">
+<div class="ps-label">ESTA SEMANA</div>
+<div class="ps-val">R$ 2.140,00</div>
+</div>
+<div class="pay-summary-card">
+<div class="ps-label">ESTE MÊS</div>
+<div class="ps-val">R$ 8.650,00</div>
+</div>
+</div>
+<div class="filter-row">
+<div class="filter-chip active" onclick="toggleFilter(this)">TODOS</div>
+<div class="filter-chip" onclick="toggleFilter(this)">PENDENTE</div>
+<div class="filter-chip" onclick="toggleFilter(this)">ATRASADO</div>
+<div class="filter-chip" onclick="toggleFilter(this)">PAGO</div>
+<div class="filter-chip" onclick="toggleFilter(this)">ESTE MÊS</div>
+</div>
+<div class="pay-item-card">
+<div class="pay-item-top">
+<span class="pay-item-name">Carlos Mendonça</span>
+<span class="status-badge pendente">PENDENTE</span>
+</div>
+<div class="pay-item-servico">Instalação de quadro elétrico</div>
+<div class="pay-item-valor">R$ 580,00</div>
+<button class="pay-action-btn cobrar">COBRAR AGORA</button>
+</div>
+<div class="pay-item-card">
+<div class="pay-item-top">
+<span class="pay-item-name">Roberto Alves</span>
+<span class="status-badge atrasado">ATRASADO</span>
+</div>
+<div class="pay-item-servico">Rede elétrica – galpão</div>
+<div class="pay-item-valor">R$ 1.320,00</div>
+<button class="pay-action-btn aviso">ENVIAR AVISO</button>
+</div>
+<div class="pay-item-card">
+<div class="pay-item-top">
+<span class="pay-item-name">Maria Aparecida</span>
+<span class="status-badge pago">PAGO</span>
+</div>
+<div class="pay-item-servico">Revisão geral – 3 cômodos</div>
+<div class="pay-item-valor">R$ 270,00</div>
+<button class="pay-action-btn">VER RECIBO</button>
+</div>
+<div class="pay-item-card">
+<div class="pay-item-top">
+<span class="pay-item-name">Fernanda Rocha</span>
+<span class="status-badge aprovado">APROVADO</span>
+</div>
+<div class="pay-item-servico">Instalação de tomadas – escritório</div>
+<div class="pay-item-valor">R$ 390,00</div>
+<button class="pay-action-btn cobrar">COBRAR AGORA</button>
+</div>
+<div class="scroll-indicator">▽</div>
+<div style="height:16px;"></div>
+</div>
+<div class="bottom-bar" style="justify-content:flex-end;">
+<div class="bottom-action">
+<div class="fab">+</div>
+<div class="fab-label">Registrar<br/>Pagamento</div>
+</div>
+</div>
+</div>
+<!-- ===== LISTA CLIENTES ===== -->
+<div class="screen" id="screen-clientes">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<span class="topbar-title">Lista Clientes</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="sub-label">CLIENTES</div>
+<div class="search-box">
+<span class="search-icon">🔍</span>
+<input placeholder="Buscar cliente..." type="text"/>
+</div>
+<div class="clientes-count">8 CLIENTES CADASTRADOS</div>
+<div class="cliente-row" onclick="goTo('screen-perfil-cliente')">
+<div class="avatar">CM</div>
+<div class="cliente-info"><div class="cnome">Carlos Mendonça</div><div class="ccel">(55) 9 9812-3344</div></div>
+</div>
+<div class="cliente-row" onclick="goTo('screen-perfil-cliente')">
+<div class="avatar">MA</div>
+<div class="cliente-info"><div class="cnome">Maria Aparecida</div><div class="ccel">(55) 9 9701-5588</div></div>
+</div>
+<div class="cliente-row" onclick="goTo('screen-perfil-cliente')">
+<div class="avatar">RA</div>
+<div class="cliente-info"><div class="cnome">Roberto Alves</div><div class="ccel">(55) 9 9633-7721</div></div>
+</div>
+<div class="cliente-row" onclick="goTo('screen-perfil-cliente')">
+<div class="avatar">FR</div>
+<div class="cliente-info"><div class="cnome">Fernanda Rocha</div><div class="ccel">(55) 9 9455-0091</div></div>
+</div>
+<div class="cliente-row" onclick="goTo('screen-perfil-cliente')">
+<div class="avatar">JP</div>
+<div class="cliente-info"><div class="cnome">João Paulo Souza</div><div class="ccel">(55) 9 9388-2267</div></div>
+</div>
+<div class="cliente-row" onclick="goTo('screen-perfil-cliente')">
+<div class="avatar">AL</div>
+<div class="cliente-info"><div class="cnome">Ana Lima</div><div class="ccel">(55) 9 9214-6630</div></div>
+</div>
+<div class="cliente-row" onclick="goTo('screen-perfil-cliente')">
+<div class="avatar">PC</div>
+<div class="cliente-info"><div class="cnome">Pedro Costa</div><div class="ccel">(55) 9 9960-1145</div></div>
+</div>
+<div class="cliente-row" onclick="goTo('screen-perfil-cliente')">
+<div class="avatar">LM</div>
+<div class="cliente-info"><div class="cnome">Luciana Martins</div><div class="ccel">(55) 9 9871-4409</div></div>
+</div>
+<div class="scroll-indicator">▽</div>
+<div style="height:16px;"></div>
+</div>
+<div class="bottom-bar" style="justify-content:flex-end;">
+<div class="bottom-action" onclick="goTo('screen-novo-cliente')">
+<div class="fab">+</div>
+<div class="fab-label">Adicionar<br/>Cliente</div>
+</div>
+</div>
+</div>
+<!-- ===== LISTA MATERIAIS ===== -->
+<div class="screen" id="screen-materiais">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<span class="topbar-title">Lista Materiais</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="sub-label">MATERIAIS</div>
+<div class="search-box">
+<span class="search-icon">🔍</span>
+<input placeholder="Buscar material..." type="text"/>
+</div>
+<div class="filter-row">
+<div class="filter-chip active" onclick="toggleFilter(this)">TODOS</div>
+<div class="filter-chip" onclick="toggleFilter(this)">FIOS</div>
+<div class="filter-chip" onclick="toggleFilter(this)">DISJUNTORES</div>
+<div class="filter-chip" onclick="toggleFilter(this)">TOMADAS</div>
+<div class="filter-chip" onclick="toggleFilter(this)">ILUMINAÇÃO</div>
+</div>
+<div class="slider-row">
+<span class="slider-arrow">◁</span>
+<input max="100" min="0" type="range" value="35"/>
+<span class="slider-arrow">▷</span>
+</div>
+<div class="mat-row">
+<div><div class="mat-nome">Fio 2,5mm² Flexível</div><div class="mat-unit">POR METRO</div></div>
+<div class="mat-price">R$ 4,90</div>
+</div>
+<div class="mat-row">
+<div><div class="mat-nome">Fio 4mm² Flexível</div><div class="mat-unit">POR METRO</div></div>
+<div class="mat-price">R$ 7,20</div>
+</div>
+<div class="mat-row">
+<div><div class="mat-nome">Disjuntor 20A Bipolar</div><div class="mat-unit">POR UNIDADE</div></div>
+<div class="mat-price">R$ 38,50</div>
+</div>
+<div class="mat-row">
+<div><div class="mat-nome">Tomada 2P+T 10A</div><div class="mat-unit">POR UNIDADE</div></div>
+<div class="mat-price">R$ 12,80</div>
+</div>
+<div class="mat-row">
+<div><div class="mat-nome">Interruptor Simples</div><div class="mat-unit">POR UNIDADE</div></div>
+<div class="mat-price">R$ 9,40</div>
+</div>
+<div class="mat-row">
+<div><div class="mat-nome">Eletroduto 3/4" Flexível</div><div class="mat-unit">POR METRO</div></div>
+<div class="mat-price">R$ 3,15</div>
+</div>
+<div class="mat-row">
+<div><div class="mat-nome">Caixa de Passagem 4x4</div><div class="mat-unit">POR UNIDADE</div></div>
+<div class="mat-price">R$ 5,60</div>
+</div>
+<div class="scroll-indicator">▽</div>
+<div style="height:16px;"></div>
+</div>
+<div class="bottom-bar" style="justify-content:flex-end;">
+<div class="bottom-action">
+<div class="fab">+</div>
+<div class="fab-label">Adicionar<br/>Material</div>
+</div>
+</div>
+</div>
+<!-- ===== NOVO ORÇAMENTO ===== -->
+<div class="screen" id="screen-orcamento">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<span class="topbar-title">Novo Orçamento</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="field-label">NOME DO CLIENTE</div>
+<div class="select-wrap">
+<select class="field-select">
+<option disabled="" selected="" value="">Selecionar cliente...</option>
+<option>Carlos Mendonça</option>
+<option>Maria Aparecida</option>
+<option>Roberto Alves</option>
+<option>Fernanda Rocha</option>
+</select>
+</div>
+<button class="cadastro-rapido-btn" onclick="goTo('screen-novo-cliente')">
+      CADASTRO RÁPIDO <span>+</span>
+</button>
+<div class="form-section">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+<span class="form-section-label">MATERIAIS</span>
+<span class="adicionar-link" onclick="goTo('screen-materiais')">ADICIONAR +</span>
+</div>
+<div class="orc-table-header">
+<span>ITEM</span><span style="text-align:center;">QTD</span><span style="text-align:right;">TOTAL</span><span></span>
+</div>
+<div class="orc-item-row">
+<div><div class="orc-item-nome">Fio 2,5mm² Flexível</div><div class="orc-item-preco">R$ 4,90 / metro</div></div>
+<div class="orc-item-qty">80</div>
+<div class="orc-item-total">R$ 392,00</div>
+<div class="orc-item-x">✕</div>
+</div>
+<div class="orc-item-row">
+<div><div class="orc-item-nome">Tomada 2P+T 10A</div><div class="orc-item-preco">R$ 12,80 / un.</div></div>
+<div class="orc-item-qty">6</div>
+<div class="orc-item-total">R$ 76,80</div>
+<div class="orc-item-x">✕</div>
+</div>
+<div class="orc-item-row">
+<div><div class="orc-item-nome">Disjuntor 20A Bipolar</div><div class="orc-item-preco">R$ 38,50 / un.</div></div>
+<div class="orc-item-qty">2</div>
+<div class="orc-item-total">R$ 77,00</div>
+<div class="orc-item-x">✕</div>
+</div>
+<div class="orc-item-row">
+<div><div class="orc-item-nome">Eletroduto 3/4" Flexível</div><div class="orc-item-preco">R$ 3,15 / metro</div></div>
+<div class="orc-item-qty">30</div>
+<div class="orc-item-total">R$ 94,50</div>
+<div class="orc-item-x">✕</div>
+</div>
+<div class="scroll-indicator">▽</div>
+</div>
+<div class="form-section">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+<span class="form-section-label">MÃO DE OBRA</span>
+<span class="adicionar-link">ADICIONAR +</span>
+</div>
+<div class="orc-item-row" style="grid-template-columns:1fr 90px 20px;">
+<div class="orc-item-nome">Instalação de quadro</div>
+<div class="orc-item-total">R$ 250,00</div>
+<div class="orc-item-x">✕</div>
+</div>
+<div class="orc-item-row" style="grid-template-columns:1fr 90px 20px;">
+<div class="orc-item-nome">Passagem de fiação</div>
+<div class="orc-item-total">R$ 180,00</div>
+<div class="orc-item-x">✕</div>
+</div>
+<div class="orc-item-row" style="grid-template-columns:1fr 90px 20px;">
+<div class="orc-item-nome">Finalização e testes</div>
+<div class="orc-item-total">R$ 120,00</div>
+<div class="orc-item-x">✕</div>
+</div>
+<div class="scroll-indicator">▽</div>
+</div>
+<div class="orc-totals-box">
+<div class="orc-total-row"><span>MATERIAIS</span><span>R$ 640,30</span></div>
+<div class="orc-total-row"><span>MÃO DE OBRA</span><span>R$ 550,00</span></div>
+<div class="orc-total-row total-main"><span>TOTAL</span><span>R$ 1.190,30</span></div>
+</div>
+<div style="height:16px;"></div>
+</div>
+<div class="dual-btns">
+<button class="dual-btn">RASCUNHO</button>
+<button class="dual-btn primary">SALVAR PDF</button>
+</div>
+</div>
+<!-- ===== AGENDA ===== -->
+<div class="screen" id="screen-agenda">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<span class="topbar-title">Agenda</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="section-label" style="margin-bottom:12px;">MINHA AGENDA</div>
+<div class="agenda-cal-box">
+<div class="agenda-cal-month">JUNHO 2026</div>
+<div class="agenda-cal-hint">📅 Calendário interativo</div>
+</div>
+<div class="agenda-day-label">HOJE – 26 DE JUNHO</div>
+<div class="agenda-event-row">
+<div class="agenda-event-hora">08:00</div>
+<div class="agenda-event-bar"></div>
+<div class="agenda-event-info">
+<div class="ev-desc">Instalação de quadro elétrico</div>
+<div class="ev-cli">Carlos Mendonça</div>
+</div>
+</div>
+<div class="agenda-event-row">
+<div class="agenda-event-hora">14:00</div>
+<div class="agenda-event-bar urgente"></div>
+<div class="agenda-event-info">
+<div class="ev-desc">Vistoria pós-reforma</div>
+<div class="ev-cli">Roberto Alves</div>
+</div>
+</div>
+<div class="agenda-day-label">AMANHÃ – 27 DE JUNHO</div>
+<div class="agenda-event-row">
+<div class="agenda-event-hora">09:30</div>
+<div class="agenda-event-bar"></div>
+<div class="agenda-event-info">
+<div class="ev-desc">Revisão geral – 3 cômodos</div>
+<div class="ev-cli">Maria Aparecida</div>
+</div>
+</div>
+<div class="agenda-event-row">
+<div class="agenda-event-hora">16:00</div>
+<div class="agenda-event-bar"></div>
+<div class="agenda-event-info">
+<div class="ev-desc">Instalação de tomadas</div>
+<div class="ev-cli">Fernanda Rocha</div>
+</div>
+</div>
+<div style="height:16px;"></div>
+</div>
+<div class="bottom-bar" style="justify-content:flex-end;">
+<div class="bottom-action">
+<div class="fab">+</div>
+<div class="fab-label">Agendar</div>
+</div>
+</div>
+</div>
+<!-- ===== NOVO CLIENTE ===== -->
+<div class="screen" id="screen-novo-cliente">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="history_back()">←</button>
+<span class="topbar-title">Novo Cliente</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="form-section-label" style="margin-bottom:6px;">IDENTIFICAÇÃO</div>
+<div style="border-top:1.5px solid #d0d0d0;margin-bottom:14px;"></div>
+<div class="field-label">NOME COMPLETO</div>
+<input class="field-input" placeholder="Ex: João da Silva" type="text"/>
+<div class="field-label">TELEFONE / WHATSAPP</div>
+<input class="field-input" placeholder="(55) 9 9000-0000" type="text"/>
+<div class="form-section">
+<div class="form-section-label" style="margin-bottom:10px;">ENDEREÇO</div>
+<div class="field-label">RUA E NÚMERO</div>
+<input class="field-input" placeholder="Ex: Rua das Acácias, 142" type="text"/>
+<div class="field-row2" style="margin-top:14px;">
+<div>
+<div class="field-label" style="margin-top:0;">BAIRRO</div>
+<input class="field-input" placeholder="Centro" type="text"/>
+</div>
+<div>
+<div class="field-label" style="margin-top:0;">CIDADE</div>
+<input class="field-input" placeholder="Ijuí" type="text"/>
+</div>
+</div>
+</div>
+<div class="form-section">
+<div class="form-section-label" style="margin-bottom:10px;">OBSERVAÇÕES</div>
+<textarea class="field-textarea" placeholder="Anotações sobre o cliente..."></textarea>
+</div>
+<div style="height:16px;"></div>
+</div>
+<div style="padding:12px 16px 20px;border-top:1px solid #e0e0e0;background:#fff;flex-shrink:0;">
+<button class="full-btn" onclick="goTo('screen-clientes')">SALVAR CLIENTE</button>
+</div>
+</div>
+<!-- ===== PERFIL DO CLIENTE ===== -->
+<div class="screen" id="screen-perfil-cliente">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-clientes')">←</button>
+<span class="topbar-title">Perfil do Cliente</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="perfil-header-box">
+<div class="perfil-edit-row">
+<span class="perfil-edit-link" onclick="goTo('screen-novo-cliente')">EDITAR</span>
+</div>
+<div class="perfil-avatar-row">
+<div class="perfil-avatar">CM</div>
+<div>
+<div class="perfil-nome">Carlos Mendonça</div>
+<div class="perfil-cidade">Ijuí – RS</div>
+</div>
+</div>
+</div>
+<div class="perfil-info-box">
+<div class="perfil-info-label">CELULAR/WHATSAPP</div>
+<div class="perfil-info-val">(55) 9 9812-3344</div>
+<div class="perfil-info-label">ENDEREÇO</div>
+<div class="perfil-info-val">Rua Sete de Setembro, 278 – Centro</div>
+<div class="perfil-info-label">OBSERVAÇÕES</div>
+<div class="perfil-info-val">Prefere contato por WhatsApp. Portão azul.</div>
+</div>
+<div class="form-section-label" style="margin-bottom:10px;">FINANCEIRO</div>
+<div class="fin-row">
+<div class="fin-card faturado">
+<div class="fin-label">TOTAL FATURADO</div>
+<div class="fin-val">R$ 3.740,00</div>
+</div>
+<div class="fin-card aberto">
+<div class="fin-label">EM ABERTO</div>
+<div class="fin-val">R$ 580,00</div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+<span class="form-section-label">ORÇAMENTOS</span>
+<span class="section-link">VER TODOS</span>
+</div>
+<div class="orc-hist-row">
+<div class="orc-hist-left">
+<div class="orc-hist-nome">Instalação de quadro elétrico</div>
+<div class="orc-hist-data">26/06/2026</div>
+</div>
+<div class="orc-hist-right">
+<span class="orc-hist-val">R$ 1.190,00</span>
+<span class="orc-hist-badge" style="background:#fff7ed;color:#92400e;border:1.5px solid #f59e0b;">PENDENTE</span>
+</div>
+</div>
+<div class="orc-hist-row">
+<div class="orc-hist-left">
+<div class="orc-hist-nome">Troca de fiação – sala</div>
+<div class="orc-hist-data">10/05/2026</div>
+</div>
+<div class="orc-hist-right">
+<span class="orc-hist-val">R$ 850,00</span>
+<span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
+</div>
+</div>
+<div class="orc-hist-row">
+<div class="orc-hist-left">
+<div class="orc-hist-nome">Instalação de ar-condicionado</div>
+<div class="orc-hist-data">02/03/2026</div>
+</div>
+<div class="orc-hist-right">
+<span class="orc-hist-val">R$ 420,00</span>
+<span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
+</div>
+</div>
+<div class="orc-hist-row">
+<div class="orc-hist-left">
+<div class="orc-hist-nome">Revisão quadro de luz</div>
+<div class="orc-hist-data">15/01/2026</div>
+</div>
+<div class="orc-hist-right">
+<span class="orc-hist-val">R$ 280,00</span>
+<span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
+</div>
+</div>
+<div class="orc-hist-row">
+<div class="orc-hist-left">
+<div class="orc-hist-nome">Passagem de fiação – quarto</div>
+<div class="orc-hist-data">08/11/2025</div>
+</div>
+<div class="orc-hist-right">
+<span class="orc-hist-val">R$ 320,00</span>
+<span class="orc-hist-badge" style="background:#eff6ff;color:#1e3a8a;border:1.5px solid #3b82f6;">APROVADO</span>
+</div>
+</div>
+<div style="height:16px;"></div>
+</div>
+</div>
+</div>
+
+<script src="script.js"></script></body>
+</html>
