@@ -71,7 +71,7 @@
 <div class="fab">+</div>
 <div class="fab-label">Agendar</div>
 </div>
-<div class="bottom-action" onclick="goTo('screen-orcamento')">
+<div class="bottom-action" onclick="novoOrcamento()">
 <div class="fab">+</div>
 <div class="fab-label">Novo<br/>Orçamento</div>
 </div>
@@ -99,56 +99,73 @@
 </div>
 </div>
 <div class="filter-row">
-<div class="filter-chip active" onclick="toggleFilter(this)">TODOS</div>
-<div class="filter-chip" onclick="toggleFilter(this)">PENDENTE</div>
-<div class="filter-chip" onclick="toggleFilter(this)">ATRASADO</div>
-<div class="filter-chip" onclick="toggleFilter(this)">PAGO</div>
-<div class="filter-chip" onclick="toggleFilter(this)">ESTE MÊS</div>
+<div class="filter-chip active" onclick="filterPagamentos(this)">TODOS</div>
+<div class="filter-chip" onclick="filterPagamentos(this)">PENDENTE</div>
+<div class="filter-chip" onclick="filterPagamentos(this)">ATRASADO</div>
+<div class="filter-chip" onclick="filterPagamentos(this)">PAGO</div>
+<div class="filter-chip" onclick="filterPagamentos(this)">ESTE MÊS</div>
 </div>
-<div class="pay-item-card">
-<div class="pay-item-top">
-<span class="pay-item-name">Carlos Mendonça</span>
-<span class="status-badge pendente">PENDENTE</span>
-</div>
-<div class="pay-item-servico">Instalação de quadro elétrico</div>
-<div class="pay-item-valor">R$ 580,00</div>
-<button class="pay-action-btn cobrar">COBRAR AGORA</button>
-</div>
-<div class="pay-item-card">
-<div class="pay-item-top">
-<span class="pay-item-name">Roberto Alves</span>
-<span class="status-badge atrasado">ATRASADO</span>
-</div>
-<div class="pay-item-servico">Rede elétrica – galpão</div>
-<div class="pay-item-valor">R$ 1.320,00</div>
-<button class="pay-action-btn aviso">ENVIAR AVISO</button>
-</div>
-<div class="pay-item-card">
-<div class="pay-item-top">
-<span class="pay-item-name">Maria Aparecida</span>
-<span class="status-badge pago">PAGO</span>
-</div>
-<div class="pay-item-servico">Revisão geral – 3 cômodos</div>
-<div class="pay-item-valor">R$ 270,00</div>
-<button class="pay-action-btn">VER RECIBO</button>
-</div>
-<div class="pay-item-card">
-<div class="pay-item-top">
-<span class="pay-item-name">Fernanda Rocha</span>
-<span class="status-badge aprovado">APROVADO</span>
-</div>
-<div class="pay-item-servico">Instalação de tomadas – escritório</div>
-<div class="pay-item-valor">R$ 390,00</div>
-<button class="pay-action-btn cobrar">COBRAR AGORA</button>
-</div>
+<div id="pay-list"></div>
 <div class="scroll-indicator">▽</div>
 <div style="height:16px;"></div>
 </div>
 <div class="bottom-bar" style="justify-content:flex-end;">
-<div class="bottom-action">
+<div class="bottom-action" onclick="goTo('screen-novo-pagamento')">
 <div class="fab">+</div>
 <div class="fab-label">Registrar<br/>Pagamento</div>
 </div>
+</div>
+</div>
+<!-- ===== NOVO PAGAMENTO ===== -->
+<div class="screen" id="screen-novo-pagamento">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-pagamentos')">←</button>
+<span class="topbar-title">Registrar Pagamento</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="form-section-label" style="margin-bottom:6px;">DADOS DO PAGAMENTO</div>
+<div style="border-top:1.5px solid #d0d0d0;margin-bottom:14px;"></div>
+<div class="field-label">CLIENTE</div>
+<div class="select-wrap">
+<select id="pay-cliente-input" class="field-select">
+<option disabled selected value="">Selecionar cliente...</option>
+<option>Carlos Mendonça</option>
+<option>Maria Aparecida</option>
+<option>Roberto Alves</option>
+<option>Fernanda Rocha</option>
+<option>João Paulo Souza</option>
+<option>Ana Lima</option>
+<option>Pedro Costa</option>
+<option>Luciana Martins</option>
+</select>
+</div>
+<div class="field-label">SERVIÇO</div>
+<input id="pay-servico-input" class="field-input" placeholder="Ex: Instalação de quadro elétrico" type="text"/>
+<div class="field-label">VALOR (R$)</div>
+<input id="pay-valor-input" class="field-input" placeholder="0,00" type="number" step="0.01" min="0"/>
+<div class="field-label">FORMA DE PAGAMENTO</div>
+<div class="filter-row" id="pay-forma-row" style="flex-wrap:wrap;gap:6px;">
+<div class="filter-chip active" onclick="selectForma(this)">PIX</div>
+<div class="filter-chip" onclick="selectForma(this)">DINHEIRO</div>
+<div class="filter-chip" onclick="selectForma(this)">CARTÃO</div>
+<div class="filter-chip" onclick="selectForma(this)">BOLETO</div>
+</div>
+<div class="field-label">STATUS</div>
+<div class="filter-row" id="pay-status-row" style="flex-wrap:wrap;gap:6px;">
+<div class="filter-chip active" onclick="selectStatusPag(this)">PAGO</div>
+<div class="filter-chip" onclick="selectStatusPag(this)">PENDENTE</div>
+<div class="filter-chip" onclick="selectStatusPag(this)">ATRASADO</div>
+</div>
+<div class="field-label">DATA</div>
+<input id="pay-data-input" class="field-input" type="date"/>
+<div id="pay-erro" style="display:none;color:#ef4444;font-size:12px;margin-top:10px;font-weight:600;"></div>
+<div style="height:16px;"></div>
+</div>
+<div style="padding:12px 16px 20px;border-top:1px solid #e0e0e0;background:#fff;flex-shrink:0;">
+<button class="full-btn" onclick="salvarPagamento()">SALVAR PAGAMENTO</button>
 </div>
 </div>
 <!-- ===== LISTA CLIENTES ===== -->
@@ -222,56 +239,71 @@
 <div class="sub-label">MATERIAIS</div>
 <div class="search-box">
 <span class="search-icon">🔍</span>
-<input placeholder="Buscar material..." type="text"/>
+<input id="mat-busca" placeholder="Buscar material..." type="text" oninput="renderMateriais()"/>
 </div>
-<div class="filter-row">
-<div class="filter-chip active" onclick="toggleFilter(this)">TODOS</div>
-<div class="filter-chip" onclick="toggleFilter(this)">FIOS</div>
-<div class="filter-chip" onclick="toggleFilter(this)">DISJUNTORES</div>
-<div class="filter-chip" onclick="toggleFilter(this)">TOMADAS</div>
-<div class="filter-chip" onclick="toggleFilter(this)">ILUMINAÇÃO</div>
+<div class="filter-row" id="mat-filter-row">
+<div class="filter-chip active" onclick="filterMateriais(this)">TODOS</div>
+<div class="filter-chip" onclick="filterMateriais(this)">FIOS</div>
+<div class="filter-chip" onclick="filterMateriais(this)">DISJUNTORES</div>
+<div class="filter-chip" onclick="filterMateriais(this)">TOMADAS</div>
+<div class="filter-chip" onclick="filterMateriais(this)">ILUMINAÇÃO</div>
 </div>
-<div class="slider-row">
-<span class="slider-arrow">◁</span>
-<input max="100" min="0" type="range" value="35"/>
-<span class="slider-arrow">▷</span>
-</div>
-<div class="mat-row">
-<div><div class="mat-nome">Fio 2,5mm² Flexível</div><div class="mat-unit">POR METRO</div></div>
-<div class="mat-price">R$ 4,90</div>
-</div>
-<div class="mat-row">
-<div><div class="mat-nome">Fio 4mm² Flexível</div><div class="mat-unit">POR METRO</div></div>
-<div class="mat-price">R$ 7,20</div>
-</div>
-<div class="mat-row">
-<div><div class="mat-nome">Disjuntor 20A Bipolar</div><div class="mat-unit">POR UNIDADE</div></div>
-<div class="mat-price">R$ 38,50</div>
-</div>
-<div class="mat-row">
-<div><div class="mat-nome">Tomada 2P+T 10A</div><div class="mat-unit">POR UNIDADE</div></div>
-<div class="mat-price">R$ 12,80</div>
-</div>
-<div class="mat-row">
-<div><div class="mat-nome">Interruptor Simples</div><div class="mat-unit">POR UNIDADE</div></div>
-<div class="mat-price">R$ 9,40</div>
-</div>
-<div class="mat-row">
-<div><div class="mat-nome">Eletroduto 3/4" Flexível</div><div class="mat-unit">POR METRO</div></div>
-<div class="mat-price">R$ 3,15</div>
-</div>
-<div class="mat-row">
-<div><div class="mat-nome">Caixa de Passagem 4x4</div><div class="mat-unit">POR UNIDADE</div></div>
-<div class="mat-price">R$ 5,60</div>
-</div>
+<div id="mat-list"></div>
 <div class="scroll-indicator">▽</div>
 <div style="height:16px;"></div>
 </div>
 <div class="bottom-bar" style="justify-content:flex-end;">
-<div class="bottom-action">
+<div class="bottom-action" onclick="goTo('screen-novo-material')">
 <div class="fab">+</div>
 <div class="fab-label">Adicionar<br/>Material</div>
 </div>
+</div>
+</div>
+<!-- ===== NOVO MATERIAL ===== -->
+<div class="screen" id="screen-novo-material">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-materiais')">←</button>
+<span class="topbar-title">Novo Material</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="form-section-label" style="margin-bottom:6px;">DADOS DO MATERIAL</div>
+<div style="border-top:1.5px solid #d0d0d0;margin-bottom:14px;"></div>
+<div class="field-label">NOME DO MATERIAL</div>
+<input id="mat-nome-input" class="field-input" placeholder="Ex: Fio 2,5mm² Flexível" type="text"/>
+<div class="field-label">CATEGORIA</div>
+<div class="filter-row" id="mat-cat-row" style="flex-wrap:wrap;gap:6px;">
+<div class="filter-chip active" onclick="selectCategoria(this)">FIOS</div>
+<div class="filter-chip" onclick="selectCategoria(this)">DISJUNTORES</div>
+<div class="filter-chip" onclick="selectCategoria(this)">TOMADAS</div>
+<div class="filter-chip" onclick="selectCategoria(this)">ILUMINAÇÃO</div>
+<div class="filter-chip" onclick="selectCategoria(this)">OUTROS</div>
+</div>
+<div class="field-row2" style="margin-top:14px;">
+<div>
+<div class="field-label" style="margin-top:0;">UNIDADE</div>
+<div class="select-wrap">
+<select id="mat-unid-input" class="field-select">
+<option value="metro">Metro</option>
+<option value="unidade" selected>Unidade</option>
+<option value="pacote">Pacote</option>
+<option value="kg">KG</option>
+<option value="rolo">Rolo</option>
+</select>
+</div>
+</div>
+<div>
+<div class="field-label" style="margin-top:0;">PREÇO (R$)</div>
+<input id="mat-preco-input" class="field-input" placeholder="0,00" type="number" step="0.01" min="0"/>
+</div>
+</div>
+<div id="mat-erro" style="display:none;color:#ef4444;font-size:12px;margin-top:10px;font-weight:600;"></div>
+<div style="height:16px;"></div>
+</div>
+<div style="padding:12px 16px 20px;border-top:1px solid #e0e0e0;background:#fff;flex-shrink:0;">
+<button class="full-btn" onclick="salvarMaterial()">SALVAR MATERIAL</button>
 </div>
 </div>
 <!-- ===== NOVO ORÇAMENTO ===== -->
@@ -300,71 +332,56 @@
 <div class="form-section">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
 <span class="form-section-label">MATERIAIS</span>
-<span class="adicionar-link" onclick="goTo('screen-materiais')">ADICIONAR +</span>
+<span class="adicionar-link" onclick="goTo('screen-picker-material')">ADICIONAR +</span>
 </div>
 <div class="orc-table-header">
 <span>ITEM</span><span style="text-align:center;">QTD</span><span style="text-align:right;">TOTAL</span><span></span>
 </div>
 <div class="orc-items-scroll">
-<div class="orc-item-row">
-<div><div class="orc-item-nome">Fio 2,5mm² Flexível</div><div class="orc-item-preco">R$ 4,90 / metro</div></div>
-<div class="orc-item-qty">80</div>
-<div class="orc-item-total">R$ 392,00</div>
-<div class="orc-item-x">✕</div>
-</div>
-<div class="orc-item-row">
-<div><div class="orc-item-nome">Tomada 2P+T 10A</div><div class="orc-item-preco">R$ 12,80 / un.</div></div>
-<div class="orc-item-qty">6</div>
-<div class="orc-item-total">R$ 76,80</div>
-<div class="orc-item-x">✕</div>
-</div>
-<div class="orc-item-row">
-<div><div class="orc-item-nome">Disjuntor 20A Bipolar</div><div class="orc-item-preco">R$ 38,50 / un.</div></div>
-<div class="orc-item-qty">2</div>
-<div class="orc-item-total">R$ 77,00</div>
-<div class="orc-item-x">✕</div>
-</div>
-<div class="orc-item-row">
-<div><div class="orc-item-nome">Eletroduto 3/4" Flexível</div><div class="orc-item-preco">R$ 3,15 / metro</div></div>
-<div class="orc-item-qty">30</div>
-<div class="orc-item-total">R$ 94,50</div>
-<div class="orc-item-x">✕</div>
-</div>
+<div id="orc-mat-list"></div>
 </div>
 </div>
 <div class="form-section">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
 <span class="form-section-label">MÃO DE OBRA</span>
-<span class="adicionar-link">ADICIONAR +</span>
+<span class="adicionar-link" onclick="toggleFormMob()">ADICIONAR +</span>
+</div>
+<div id="orc-mob-form" style="display:none;margin-bottom:10px;">
+<input id="mob-nome-input" class="field-input" placeholder="Ex: Instalação de quadro" type="text" style="margin-bottom:6px;"/>
+<div style="display:flex;gap:8px;align-items:center;">
+<input id="mob-valor-input" class="field-input" placeholder="Valor R$" type="number" step="0.01" min="0" style="flex:1;"/>
+<button onclick="adicionarMobOrc()" style="background:#1e3a5f;color:#fff;border:none;border-radius:8px;padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;">OK</button>
+</div>
 </div>
 <div class="orc-items-scroll">
-<div class="orc-item-row" style="grid-template-columns:1fr 90px 20px;">
-<div class="orc-item-nome">Instalação de quadro</div>
-<div class="orc-item-total">R$ 250,00</div>
-<div class="orc-item-x">✕</div>
-</div>
-<div class="orc-item-row" style="grid-template-columns:1fr 90px 20px;">
-<div class="orc-item-nome">Passagem de fiação</div>
-<div class="orc-item-total">R$ 180,00</div>
-<div class="orc-item-x">✕</div>
-</div>
-<div class="orc-item-row" style="grid-template-columns:1fr 90px 20px;">
-<div class="orc-item-nome">Finalização e testes</div>
-<div class="orc-item-total">R$ 120,00</div>
-<div class="orc-item-x">✕</div>
-</div>
+<div id="orc-mob-list"></div>
 </div>
 </div>
 <div class="orc-totals-box">
-<div class="orc-total-row"><span>MATERIAIS</span><span>R$ 640,30</span></div>
-<div class="orc-total-row"><span>MÃO DE OBRA</span><span>R$ 550,00</span></div>
-<div class="orc-total-row total-main"><span>TOTAL</span><span>R$ 1.190,30</span></div>
+<div class="orc-total-row"><span>MATERIAIS</span><span id="orc-total-mat">R$ 0,00</span></div>
+<div class="orc-total-row"><span>MÃO DE OBRA</span><span id="orc-total-mob">R$ 0,00</span></div>
+<div class="orc-total-row total-main"><span>TOTAL</span><span id="orc-total-geral">R$ 0,00</span></div>
 </div>
 <div style="height:16px;"></div>
 </div>
 <div class="dual-btns">
 <button class="dual-btn">RASCUNHO</button>
 <button class="dual-btn primary">SALVAR PDF</button>
+</div>
+</div>
+<!-- ===== PICKER MATERIAL ===== -->
+<div class="screen" id="screen-picker-material">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-orcamento')">←</button>
+<span class="topbar-title">Selecionar Material</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="sub-label" style="margin-bottom:10px;">MATERIAIS CADASTRADOS</div>
+<div id="picker-mat-list"></div>
+<div style="height:16px;"></div>
 </div>
 </div>
 <!-- ===== AGENDA ===== -->
@@ -379,47 +396,61 @@
 <div class="scroll-body">
 <div class="section-label" style="margin-bottom:12px;">MINHA AGENDA</div>
 <div class="agenda-cal-container" id="agenda-cal"></div>
-<div class="agenda-day-label">HOJE – 30 DE JUNHO</div>
-<div class="agenda-event-row">
-<div class="agenda-event-hora">08:00</div>
-<div class="agenda-event-bar"></div>
-<div class="agenda-event-info">
-<div class="ev-desc">Instalação de quadro elétrico</div>
-<div class="ev-cli">Carlos Mendonça</div>
-</div>
-</div>
-<div class="agenda-event-row">
-<div class="agenda-event-hora">14:00</div>
-<div class="agenda-event-bar urgente"></div>
-<div class="agenda-event-info">
-<div class="ev-desc">Vistoria pós-reforma</div>
-<div class="ev-cli">Roberto Alves</div>
-</div>
-</div>
-<div class="agenda-day-label">AMANHÃ – 01 DE JULHO</div>
-<div class="agenda-event-row">
-<div class="agenda-event-hora">09:30</div>
-<div class="agenda-event-bar"></div>
-<div class="agenda-event-info">
-<div class="ev-desc">Revisão geral – 3 cômodos</div>
-<div class="ev-cli">Maria Aparecida</div>
-</div>
-</div>
-<div class="agenda-event-row">
-<div class="agenda-event-hora">16:00</div>
-<div class="agenda-event-bar"></div>
-<div class="agenda-event-info">
-<div class="ev-desc">Instalação de tomadas</div>
-<div class="ev-cli">Fernanda Rocha</div>
-</div>
-</div>
+<div id="agenda-events"></div>
 <div style="height:16px;"></div>
 </div>
 <div class="bottom-bar" style="justify-content:flex-end;">
-<div class="bottom-action">
+<div class="bottom-action" onclick="goTo('screen-novo-agendamento')">
 <div class="fab">+</div>
 <div class="fab-label">Agendar</div>
 </div>
+</div>
+</div>
+<!-- ===== NOVO AGENDAMENTO ===== -->
+<div class="screen" id="screen-novo-agendamento">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-agenda')">←</button>
+<span class="topbar-title">Novo Agendamento</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="form-section-label" style="margin-bottom:6px;">DADOS DO AGENDAMENTO</div>
+<div style="border-top:1.5px solid #d0d0d0;margin-bottom:14px;"></div>
+<div class="field-label">CLIENTE</div>
+<div class="select-wrap">
+<select id="ag-cliente-input" class="field-select">
+<option disabled selected value="">Selecionar cliente...</option>
+<option>Carlos Mendonça</option>
+<option>Maria Aparecida</option>
+<option>Roberto Alves</option>
+<option>Fernanda Rocha</option>
+<option>João Paulo Souza</option>
+<option>Ana Lima</option>
+<option>Pedro Costa</option>
+<option>Luciana Martins</option>
+</select>
+</div>
+<div class="field-label">DESCRIÇÃO DO SERVIÇO</div>
+<input id="ag-desc-input" class="field-input" placeholder="Ex: Instalação de quadro elétrico" type="text"/>
+<div class="field-row2" style="margin-top:14px;">
+<div>
+<div class="field-label" style="margin-top:0;">DATA</div>
+<input id="ag-data-input" class="field-input" type="date"/>
+</div>
+<div>
+<div class="field-label" style="margin-top:0;">HORA</div>
+<input id="ag-hora-input" class="field-input" type="time"/>
+</div>
+</div>
+<div class="field-label">OBSERVAÇÕES</div>
+<textarea id="ag-obs-input" class="field-textarea" placeholder="Detalhes adicionais..."></textarea>
+<div id="ag-erro" style="display:none;color:#ef4444;font-size:12px;margin-top:10px;font-weight:600;"></div>
+<div style="height:16px;"></div>
+</div>
+<div style="padding:12px 16px 20px;border-top:1px solid #e0e0e0;background:#fff;flex-shrink:0;">
+<button class="full-btn" onclick="salvarAgendamento()">SALVAR AGENDAMENTO</button>
 </div>
 </div>
 <!-- ===== NOVO CLIENTE ===== -->
