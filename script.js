@@ -250,7 +250,9 @@ function abrirDetalheAgendamento(idx) {
   document.getElementById('det-avatar').textContent = initials;
   var detCliente = document.getElementById('det-cliente');
   detCliente.textContent = a.cliente;
-  detCliente.style.cssText += ';cursor:pointer;text-decoration:underline;text-underline-offset:3px;';
+  detCliente.style.cursor = 'pointer';
+  detCliente.style.textDecoration = 'underline';
+  detCliente.style.textUnderlineOffset = '3px';
   detCliente.onclick = function() { goTo('screen-perfil-cliente'); };
   document.getElementById('det-data-hora').textContent = dataFmt + ' · ' + a.hora;
   document.getElementById('det-desc').textContent = a.desc;
