@@ -1,5 +1,33 @@
 var _prevScreen = 'screen-home';
 
+/* ── TOAST ── */
+var _toastTimer = null;
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+/* ── CONFIRM ── */
+var _confirmCb = null;
+function showConfirm(msg, cb) {
+  document.getElementById('confirm-msg').textContent = msg;
+  document.getElementById('confirm-modal').classList.add('show');
+  _confirmCb = cb;
+}
+function confirmOk() {
+  document.getElementById('confirm-modal').classList.remove('show');
+  if (_confirmCb) _confirmCb();
+  _confirmCb = null;
+}
+function confirmCancel() {
+  document.getElementById('confirm-modal').classList.remove('show');
+  _confirmCb = null;
+}
+
 var pagamentos = [
   { cliente: 'Carlos Mendonça', servico: 'Instalação de quadro elétrico', valor: 580.00,  status: 'pendente', forma: 'PIX',      data: '2026-06-26' },
   { cliente: 'Roberto Alves',   servico: 'Rede elétrica – galpão',        valor: 1320.00, status: 'atrasado', forma: 'BOLETO',   data: '2026-06-10' },
@@ -72,6 +100,7 @@ function salvarPagamento() {
   if (!data) { erro.textContent = 'Informe a data.'; erro.style.display = 'block'; return; }
 
   erro.style.display = 'none';
+  showToast('Pagamento registrado!');
   pagamentos.unshift({
     cliente: cliente,
     servico: servico,
@@ -237,9 +266,11 @@ function abrirDetalheAgendamento(idx) {
 
 function cancelarAgendamento() {
   if (_agendamentoIdx < 0) return;
-  agendamentos.splice(_agendamentoIdx, 1);
-  _agendamentoIdx = -1;
-  goTo('screen-agenda');
+  showConfirm('Cancelar este agendamento? Esta ação não pode ser desfeita.', function() {
+    agendamentos.splice(_agendamentoIdx, 1);
+    _agendamentoIdx = -1;
+    goTo('screen-agenda');
+  });
 }
 
 function editarAgendamento() {
@@ -285,10 +316,12 @@ function salvarAgendamento() {
   document.getElementById('ag-hora-input').value = '';
   document.getElementById('ag-obs-input').value = '';
 
+  showToast('Agendamento salvo!');
   goTo('screen-agenda');
 }
 
 renderHomeAgenda();
+renderPayHome();
 
 var materiais = [
   { nome: 'Fio 2,5mm² Flexível',    unit: 'metro',    preco: 4.90,  cat: 'FIOS' },
@@ -365,7 +398,92 @@ function salvarMaterial() {
   document.querySelectorAll('#mat-cat-row .filter-chip').forEach(function(c) { c.classList.remove('active'); });
   document.querySelector('#mat-cat-row .filter-chip').classList.add('active');
 
+  showToast('Material salvo com sucesso!');
   goTo('screen-materiais');
+}
+
+var orcamentosSalvos = [];
+
+function salvarOrcamentoPDF() {
+  if (orcamentoAtual.materiais.length === 0 && orcamentoAtual.maoDeObra.length === 0) {
+    showToast('Adicione itens ao orçamento primeiro.');
+    return;
+  }
+  var clienteEl = document.querySelector('#screen-orcamento .field-select');
+  var cliente = clienteEl && clienteEl.value ? clienteEl.value : 'Cliente';
+  var total = orcamentoAtual.materiais.reduce(function(s,m){return s+m.preco*m.qty;},0)
+            + orcamentoAtual.maoDeObra.reduce(function(s,m){return s+m.valor;},0);
+  orcamentosSalvos.push({ cliente: cliente, total: total, status: 'pendente', data: new Date().toISOString().split('T')[0] });
+  showToast('Orçamento salvo!');
+  goTo('screen-home');
+}
+
+function salvarRascunho() {
+  showToast('Rascunho salvo!');
+}
+
+function salvarCliente() {
+  showToast('Cliente salvo com sucesso!');
+  goTo('screen-clientes');
+}
+
+function renderPayHome() {
+  var list = document.getElementById('pay-home-list');
+  if (!list) return;
+  var pendentes = pagamentos.filter(function(p) { return p.status === 'pendente' || p.status === 'atrasado'; });
+  var totalHoje = pendentes.reduce(function(s,p){return s+p.valor;},0);
+  var fmt = function(v) { return 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:2}); };
+  var html = '<div class="pay-home-card today"><span class="pnome">A RECEBER:</span><span class="pvalor">' + fmt(totalHoje) + '</span></div>';
+  pendentes.slice(0,2).forEach(function(p) {
+    html += '<div class="pay-home-card" onclick="goTo(\'screen-pagamentos\')" role="button"><span class="pnome">' + p.cliente + '</span><span class="pvalor">' + fmt(p.valor) + '</span></div>';
+  });
+  if (pendentes.length === 0) html = '<div class="empty-state">Nenhum pagamento pendente.</div>';
+  list.innerHTML = html;
+}
+
+function renderRelatorio() {
+  var fmt = function(v) { return 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:2}); };
+  var faturado = pagamentos.filter(function(p){return p.status==='pago';}).reduce(function(s,p){return s+p.valor;},0);
+  var aberto   = pagamentos.filter(function(p){return p.status==='pendente'||p.status==='atrasado';}).reduce(function(s,p){return s+p.valor;},0);
+  var el1=document.getElementById('rel-faturado');     if(el1) el1.textContent=fmt(faturado);
+  var el2=document.getElementById('rel-aberto');       if(el2) el2.textContent=fmt(aberto);
+  var el3=document.getElementById('rel-orc-count');    if(el3) el3.textContent=pagamentos.length;
+  var el4=document.getElementById('rel-orc-aprovados');if(el4) el4.textContent=pagamentos.filter(function(p){return p.status==='pago';}).length;
+}
+
+function buscaGlobal() {
+  var q = (document.getElementById('home-search-input')||{}).value||'';
+  var results = document.getElementById('home-search-results');
+  var main = document.getElementById('home-main-content');
+  if (!q.trim()) {
+    results.classList.remove('show'); results.innerHTML='';
+    if(main) main.style.display='';
+    return;
+  }
+  if(main) main.style.display='none';
+  results.classList.add('show');
+  var ql = q.toLowerCase();
+  var matRes = materiais.filter(function(m){return m.nome.toLowerCase().indexOf(ql)!==-1;});
+  var agRes  = agendamentos.filter(function(a){return a.desc.toLowerCase().indexOf(ql)!==-1||a.cliente.toLowerCase().indexOf(ql)!==-1;});
+  var payRes = pagamentos.filter(function(p){return p.cliente.toLowerCase().indexOf(ql)!==-1||p.servico.toLowerCase().indexOf(ql)!==-1;});
+  var html = '';
+  if(matRes.length){
+    html+='<div class="search-group"><div class="search-group-title">Materiais</div>';
+    matRes.forEach(function(m){html+='<div class="search-item" onclick="goTo(\'screen-materiais\')" role="button"><div class="search-item-nome">'+m.nome+'</div><div class="search-item-sub">R$ '+m.preco.toFixed(2).replace('.',',')+'/ '+m.unit+'</div></div>';});
+    html+='</div>';
+  }
+  if(agRes.length){
+    html+='<div class="search-group"><div class="search-group-title">Agendamentos</div>';
+    agRes.forEach(function(a){var idx=agendamentos.indexOf(a);html+='<div class="search-item" onclick="abrirDetalheAgendamento('+idx+')" role="button"><div class="search-item-nome">'+a.desc+'</div><div class="search-item-sub">'+a.cliente+' · '+a.hora+'</div></div>';});
+    html+='</div>';
+  }
+  if(payRes.length){
+    html+='<div class="search-group"><div class="search-group-title">Pagamentos</div>';
+    payRes.forEach(function(p){html+='<div class="search-item" onclick="goTo(\'screen-pagamentos\')" role="button"><div class="search-item-nome">'+p.cliente+'</div><div class="search-item-sub">'+p.servico+'</div></div>';});
+    html+='</div>';
+  }
+  if(!html) html='<div class="search-empty">Nenhum resultado para "'+q+'".</div>';
+  results.innerHTML=html;
 }
 
 var orcamentoAtual = { materiais: [], maoDeObra: [] };
@@ -418,8 +536,16 @@ function renderOrcamento() {
   var el3 = document.getElementById('orc-total-geral'); if (el3) el3.textContent = fmt(totalMat + totalMob);
 }
 
-function removerMatOrc(i) { orcamentoAtual.materiais.splice(i, 1); renderOrcamento(); }
-function removerMobOrc(i) { orcamentoAtual.maoDeObra.splice(i, 1); renderOrcamento(); }
+function removerMatOrc(i) {
+  showConfirm('Remover este material do orçamento?', function() {
+    orcamentoAtual.materiais.splice(i, 1); renderOrcamento();
+  });
+}
+function removerMobOrc(i) {
+  showConfirm('Remover este item de mão de obra?', function() {
+    orcamentoAtual.maoDeObra.splice(i, 1); renderOrcamento();
+  });
+}
 
 function toggleFormMob() {
   var f = document.getElementById('orc-mob-form');
@@ -472,7 +598,8 @@ function goTo(id) {
   el.classList.add('active');
   var sb = el.querySelector('.scroll-body');
   if (sb) sb.scrollTop = 0;
-  if (id === 'screen-home') renderHomeAgenda();
+  if (id === 'screen-home') { renderHomeAgenda(); renderPayHome(); }
+  if (id === 'screen-relatorio') renderRelatorio();
   if (id === 'screen-orcamento') renderOrcamento();
   if (id === 'screen-picker-material') renderPickerMaterial();
   if (id === 'screen-agenda') { renderCalendar(); renderAgenda(); }
