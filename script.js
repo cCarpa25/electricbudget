@@ -248,7 +248,10 @@ function abrirDetalheAgendamento(idx) {
 
   var initials = a.cliente.split(' ').map(function(p) { return p[0]; }).slice(0,2).join('');
   document.getElementById('det-avatar').textContent = initials;
-  document.getElementById('det-cliente').textContent = a.cliente;
+  var detCliente = document.getElementById('det-cliente');
+  detCliente.textContent = a.cliente;
+  detCliente.style.cssText += ';cursor:pointer;text-decoration:underline;text-underline-offset:3px;';
+  detCliente.onclick = function() { goTo('screen-perfil-cliente'); };
   document.getElementById('det-data-hora').textContent = dataFmt + ' · ' + a.hora;
   document.getElementById('det-desc').textContent = a.desc;
   var obsLabel = document.getElementById('det-obs-label');
