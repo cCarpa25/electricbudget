@@ -26,18 +26,7 @@
 <span class="section-label">Minha Agenda</span>
 <span class="section-link" onclick="goTo('screen-agenda')">VER TODOS</span>
 </div>
-<div class="sub-label">HOJE</div>
-<div class="agenda-card">
-<div class="horario">08:00</div>
-<div class="cliente-name">Carlos Mendonça</div>
-<div class="descricao">Instalação de quadro elétrico</div>
-</div>
-<div class="sub-label">ESTA SEMANA</div>
-<div class="agenda-card">
-<div class="horario">Qui, 14:00</div>
-<div class="cliente-name">Maria Aparecida</div>
-<div class="descricao">Revisão geral – 3 cômodos</div>
-</div>
+<div id="home-agenda-list"></div>
 <div class="section-header">
 <span class="section-label">Orçamentos</span>
 <span class="section-link" onclick="goTo('screen-relatorio')">VER TODOS</span>
@@ -404,6 +393,40 @@
 <div class="fab">+</div>
 <div class="fab-label">Agendar</div>
 </div>
+</div>
+</div>
+<!-- ===== DETALHE AGENDAMENTO ===== -->
+<div class="screen" id="screen-detalhe-agendamento">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-agenda')">←</button>
+<span class="topbar-title">Compromisso</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="perfil-header-box" style="margin-bottom:16px;">
+<div class="perfil-avatar-row">
+<div class="perfil-avatar" id="det-avatar" style="background:#1e3a5f;color:#fff;">CM</div>
+<div>
+<div class="perfil-nome" id="det-cliente"></div>
+<div class="perfil-cidade" id="det-data-hora"></div>
+</div>
+</div>
+</div>
+<div class="form-section-label" style="margin-bottom:6px;">SERVIÇO</div>
+<div style="border-top:1.5px solid #222;margin-bottom:14px;"></div>
+<div class="perfil-info-box">
+<div class="perfil-info-label">DESCRIÇÃO</div>
+<div class="perfil-info-val" id="det-desc"></div>
+<div class="perfil-info-label" id="det-obs-label">OBSERVAÇÕES</div>
+<div class="perfil-info-val" id="det-obs"></div>
+</div>
+<div style="height:16px;"></div>
+</div>
+<div class="dual-btns">
+<button class="dual-btn" style="color:#ef4444;border-color:#ef4444;" onclick="cancelarAgendamento()">CANCELAR</button>
+<button class="dual-btn primary" onclick="editarAgendamento()">EDITAR</button>
 </div>
 </div>
 <!-- ===== NOVO AGENDAMENTO ===== -->

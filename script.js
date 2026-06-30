@@ -138,17 +138,121 @@ function renderAgenda() {
   ordem.forEach(function(data) {
     html += '<div class="agenda-day-label">' + _dataLabel(data) + '</div>';
     grupos[data].forEach(function(a) {
-      html += '<div class="agenda-event-row">'
+      var idx = agendamentos.indexOf(a);
+      html += '<div class="agenda-event-row" onclick="abrirDetalheAgendamento(' + idx + ')" style="cursor:pointer;">'
         + '<div class="agenda-event-hora">' + a.hora + '</div>'
         + '<div class="agenda-event-bar"></div>'
         + '<div class="agenda-event-info">'
         + '<div class="ev-desc">' + a.desc + '</div>'
         + '<div class="ev-cli">' + a.cliente + '</div>'
-        + (a.obs ? '<div class="ev-cli" style="color:#aaa;">' + a.obs + '</div>' : '')
         + '</div></div>';
     });
   });
   container.innerHTML = html;
+}
+
+var _diasAbrev = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+function renderHomeAgenda() {
+  var container = document.getElementById('home-agenda-list');
+  if (!container) return;
+
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+  var fimSemana = new Date(hoje); fimSemana.setDate(fimSemana.getDate() + 7);
+
+  var sorted = agendamentos.slice().sort(function(a, b) {
+    return (a.data + a.hora).localeCompare(b.data + b.hora);
+  });
+
+  var deHoje = [], daSemana = [];
+  sorted.forEach(function(a) {
+    var parts = a.data.split('-');
+    var d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    if (d.getTime() === hoje.getTime()) deHoje.push(a);
+    else if (d > hoje && d <= fimSemana) daSemana.push(a);
+  });
+
+  var html = '';
+
+  if (deHoje.length > 0) {
+    html += '<div class="sub-label">HOJE</div>';
+    deHoje.forEach(function(a) {
+      var idx = agendamentos.indexOf(a);
+      html += '<div class="agenda-card" onclick="abrirDetalheAgendamento(' + idx + ')" style="cursor:pointer;">'
+        + '<div class="horario">' + a.hora + '</div>'
+        + '<div class="cliente-name">' + a.cliente + '</div>'
+        + '<div class="descricao">' + a.desc + '</div>'
+        + '</div>';
+    });
+  }
+
+  if (daSemana.length > 0) {
+    html += '<div class="sub-label">ESTA SEMANA</div>';
+    daSemana.slice(0, 2).forEach(function(a) {
+      var idx = agendamentos.indexOf(a);
+      var parts = a.data.split('-');
+      var d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      var horario = _diasAbrev[d.getDay()] + ', ' + a.hora;
+      html += '<div class="agenda-card" onclick="abrirDetalheAgendamento(' + idx + ')" style="cursor:pointer;">'
+        + '<div class="horario">' + horario + '</div>'
+        + '<div class="cliente-name">' + a.cliente + '</div>'
+        + '<div class="descricao">' + a.desc + '</div>'
+        + '</div>';
+    });
+  }
+
+  if (!html) {
+    html = '<div style="color:#aaa;font-size:13px;padding:8px 0 12px;">Nenhum compromisso próximo.</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+var _agendamentoIdx = -1;
+
+function abrirDetalheAgendamento(idx) {
+  _agendamentoIdx = idx;
+  var a = agendamentos[idx];
+  var parts = a.data.split('-');
+  var d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  var dataFmt = d.getDate() + ' de ' + _meses[d.getMonth()].charAt(0) + _meses[d.getMonth()].slice(1).toLowerCase() + ' de ' + parts[0];
+
+  var initials = a.cliente.split(' ').map(function(p) { return p[0]; }).slice(0,2).join('');
+  document.getElementById('det-avatar').textContent = initials;
+  document.getElementById('det-cliente').textContent = a.cliente;
+  document.getElementById('det-data-hora').textContent = dataFmt + ' · ' + a.hora;
+  document.getElementById('det-desc').textContent = a.desc;
+  var obsLabel = document.getElementById('det-obs-label');
+  var obsEl = document.getElementById('det-obs');
+  if (a.obs) {
+    obsLabel.style.display = 'block';
+    obsEl.textContent = a.obs;
+    obsEl.style.display = 'block';
+  } else {
+    obsLabel.style.display = 'none';
+    obsEl.style.display = 'none';
+  }
+  goTo('screen-detalhe-agendamento');
+}
+
+function cancelarAgendamento() {
+  if (_agendamentoIdx < 0) return;
+  agendamentos.splice(_agendamentoIdx, 1);
+  _agendamentoIdx = -1;
+  goTo('screen-agenda');
+}
+
+function editarAgendamento() {
+  if (_agendamentoIdx < 0) return;
+  var a = agendamentos[_agendamentoIdx];
+  document.getElementById('ag-cliente-input').value = a.cliente;
+  document.getElementById('ag-desc-input').value = a.desc;
+  document.getElementById('ag-data-input').value = a.data;
+  document.getElementById('ag-hora-input').value = a.hora;
+  document.getElementById('ag-obs-input').value = a.obs || '';
+  agendamentos.splice(_agendamentoIdx, 1);
+  _agendamentoIdx = -1;
+  goTo('screen-novo-agendamento');
 }
 
 function salvarAgendamento() {
@@ -183,6 +287,8 @@ function salvarAgendamento() {
 
   goTo('screen-agenda');
 }
+
+renderHomeAgenda();
 
 var materiais = [
   { nome: 'Fio 2,5mm² Flexível',    unit: 'metro',    preco: 4.90,  cat: 'FIOS' },
@@ -366,6 +472,7 @@ function goTo(id) {
   el.classList.add('active');
   var sb = el.querySelector('.scroll-body');
   if (sb) sb.scrollTop = 0;
+  if (id === 'screen-home') renderHomeAgenda();
   if (id === 'screen-orcamento') renderOrcamento();
   if (id === 'screen-picker-material') renderPickerMaterial();
   if (id === 'screen-agenda') { renderCalendar(); renderAgenda(); }
