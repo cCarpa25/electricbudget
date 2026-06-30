@@ -14,56 +14,39 @@
 <div class="topbar">
 <div class="topbar-row">
 <span class="topbar-title" onclick="goTo('screen-perfil-eletricista')" style="cursor:pointer;">Electric Budget</span>
-<span class="bell-icon" onclick="goTo('screen-notificacoes')">🔔</span>
+<span class="bell-icon" onclick="goTo('screen-notificacoes')" aria-label="Notificações" role="button">🔔</span>
 </div>
 </div>
 <div class="scroll-body">
 <div class="quick-btns">
-<div class="quick-btn" onclick="goTo('screen-clientes')">CLIENTES</div>
-<div class="quick-btn" onclick="goTo('screen-materiais')">MATERIAIS</div>
+<div class="quick-btn" onclick="goTo('screen-clientes')" aria-label="Ir para clientes">CLIENTES</div>
+<div class="quick-btn" onclick="goTo('screen-materiais')" aria-label="Ir para materiais">MATERIAIS</div>
 </div>
+<div class="home-search" role="search">
+<span class="home-search-icon" aria-hidden="true">🔍</span>
+<input id="home-search-input" placeholder="Buscar clientes, serviços, materiais..." type="search" oninput="buscaGlobal()" aria-label="Busca global"/>
+</div>
+<div id="home-search-results" class="search-results" aria-live="polite"></div>
+<div id="home-main-content">
 <div class="section-header">
 <span class="section-label">Minha Agenda</span>
-<span class="section-link" onclick="goTo('screen-agenda')">VER TODOS</span>
+<span class="section-link" onclick="goTo('screen-agenda')" role="button">VER TODOS</span>
 </div>
-<div class="sub-label">HOJE</div>
-<div class="agenda-card">
-<div class="horario">08:00</div>
-<div class="cliente-name">Carlos Mendonça</div>
-<div class="descricao">Instalação de quadro elétrico</div>
-</div>
-<div class="sub-label">ESTA SEMANA</div>
-<div class="agenda-card">
-<div class="horario">Qui, 14:00</div>
-<div class="cliente-name">Maria Aparecida</div>
-<div class="descricao">Revisão geral – 3 cômodos</div>
-</div>
+<div id="home-agenda-list"></div>
 <div class="section-header">
 <span class="section-label">Orçamentos</span>
-<span class="section-link" onclick="goTo('screen-relatorio')">VER TODOS</span>
+<span class="section-link" onclick="goTo('screen-relatorio')" role="button">VER TODOS</span>
 </div>
 <div class="orc-row">
-<div class="orc-chip pendente" onclick="goTo('screen-orcamento')">3 PENDENTES</div>
-<div class="orc-chip aguardando" onclick="goTo('screen-orcamento')">2 AGUARDANDO APROVAÇÃO</div>
+<div class="orc-chip pendente" onclick="novoOrcamento()" aria-label="Ver orçamentos pendentes">PENDENTES</div>
+<div class="orc-chip aguardando" onclick="novoOrcamento()" aria-label="Ver orçamentos aguardando aprovação">AGUARDANDO</div>
 </div>
 <div class="section-header" style="margin-top:20px;">
 <span class="section-label">Pagamentos</span>
 </div>
-<div class="pay-home-scroll">
-<div class="pay-home-card today">
-<span class="pnome">A RECEBER HOJE:</span>
-<span class="pvalor">R$ 850,00</span>
+<div class="pay-home-scroll" id="pay-home-list"></div>
 </div>
-<div class="pay-home-card" onclick="goTo('screen-pagamentos')">
-<span class="pnome">Carlos Mendonça</span>
-<span class="pvalor">R$ 580,00</span>
-</div>
-<div class="pay-home-card" onclick="goTo('screen-pagamentos')">
-<span class="pnome">Fernanda Rocha</span>
-<span class="pvalor">R$ 270,00</span>
-</div>
-</div>
-<div class="scroll-indicator">▽</div>
+<div class="scroll-indicator" aria-hidden="true">▽</div>
 <div style="height:16px;"></div>
 </div>
 <div class="bottom-bar">
@@ -81,7 +64,7 @@
 <div class="screen" id="screen-pagamentos">
 <div class="topbar">
 <div class="topbar-row">
-<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<button class="back-btn" onclick="goTo('screen-home')" aria-label="Voltar">←</button>
 <span class="topbar-title">Pagamentos</span>
 <span style="width:28px;"></span>
 </div>
@@ -172,7 +155,7 @@
 <div class="screen" id="screen-clientes">
 <div class="topbar">
 <div class="topbar-row">
-<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<button class="back-btn" onclick="goTo('screen-home')" aria-label="Voltar">←</button>
 <span class="topbar-title">Lista Clientes</span>
 <span style="width:28px;"></span>
 </div>
@@ -230,7 +213,7 @@
 <div class="screen" id="screen-materiais">
 <div class="topbar">
 <div class="topbar-row">
-<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<button class="back-btn" onclick="goTo('screen-home')" aria-label="Voltar">←</button>
 <span class="topbar-title">Lista Materiais</span>
 <span style="width:28px;"></span>
 </div>
@@ -253,7 +236,7 @@
 <div style="height:16px;"></div>
 </div>
 <div class="bottom-bar" style="justify-content:flex-end;">
-<div class="bottom-action" onclick="goTo('screen-novo-material')">
+<div class="bottom-action" onclick="novoMaterial()">
 <div class="fab">+</div>
 <div class="fab-label">Adicionar<br/>Material</div>
 </div>
@@ -264,7 +247,7 @@
 <div class="topbar">
 <div class="topbar-row">
 <button class="back-btn" onclick="goTo('screen-materiais')">←</button>
-<span class="topbar-title">Novo Material</span>
+<span class="topbar-title" id="mat-form-title">Novo Material</span>
 <span style="width:28px;"></span>
 </div>
 </div>
@@ -310,7 +293,7 @@
 <div class="screen" id="screen-orcamento">
 <div class="topbar">
 <div class="topbar-row">
-<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<button class="back-btn" onclick="goTo('screen-home')" aria-label="Voltar">←</button>
 <span class="topbar-title">Novo Orçamento</span>
 <span style="width:28px;"></span>
 </div>
@@ -365,8 +348,8 @@
 <div style="height:16px;"></div>
 </div>
 <div class="dual-btns">
-<button class="dual-btn">RASCUNHO</button>
-<button class="dual-btn primary">SALVAR PDF</button>
+<button class="dual-btn" onclick="salvarRascunho()" aria-label="Salvar como rascunho">RASCUNHO</button>
+<button class="dual-btn primary" onclick="salvarOrcamentoPDF()" aria-label="Salvar orçamento">SALVAR PDF</button>
 </div>
 </div>
 <!-- ===== PICKER MATERIAL ===== -->
@@ -388,7 +371,7 @@
 <div class="screen" id="screen-agenda">
 <div class="topbar">
 <div class="topbar-row">
-<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<button class="back-btn" onclick="goTo('screen-home')" aria-label="Voltar">←</button>
 <span class="topbar-title">Agenda</span>
 <span style="width:28px;"></span>
 </div>
@@ -404,6 +387,40 @@
 <div class="fab">+</div>
 <div class="fab-label">Agendar</div>
 </div>
+</div>
+</div>
+<!-- ===== DETALHE AGENDAMENTO ===== -->
+<div class="screen" id="screen-detalhe-agendamento">
+<div class="topbar">
+<div class="topbar-row">
+<button class="back-btn" onclick="goTo('screen-agenda')">←</button>
+<span class="topbar-title">Compromisso</span>
+<span style="width:28px;"></span>
+</div>
+</div>
+<div class="scroll-body">
+<div class="perfil-header-box" style="margin-bottom:16px;">
+<div class="perfil-avatar-row">
+<div class="perfil-avatar" id="det-avatar" style="background:#1e3a5f;color:#fff;">CM</div>
+<div>
+<div class="perfil-nome" id="det-cliente" onclick="goTo('screen-perfil-cliente')" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px;"></div>
+<div class="perfil-cidade" id="det-data-hora"></div>
+</div>
+</div>
+</div>
+<div class="form-section-label" style="margin-bottom:6px;">SERVIÇO</div>
+<div style="border-top:1.5px solid #222;margin-bottom:14px;"></div>
+<div class="perfil-info-box">
+<div class="perfil-info-label">DESCRIÇÃO</div>
+<div class="perfil-info-val" id="det-desc"></div>
+<div class="perfil-info-label" id="det-obs-label">OBSERVAÇÕES</div>
+<div class="perfil-info-val" id="det-obs"></div>
+</div>
+<div style="height:16px;"></div>
+</div>
+<div class="dual-btns">
+<button class="dual-btn" style="color:#ef4444;border-color:#ef4444;" onclick="cancelarAgendamento()">CANCELAR</button>
+<button class="dual-btn primary" onclick="editarAgendamento()">EDITAR</button>
 </div>
 </div>
 <!-- ===== NOVO AGENDAMENTO ===== -->
@@ -491,7 +508,7 @@
 <div style="height:16px;"></div>
 </div>
 <div style="padding:12px 16px 20px;border-top:1px solid #e0e0e0;background:#fff;flex-shrink:0;">
-<button class="full-btn" onclick="goTo('screen-clientes')">SALVAR CLIENTE</button>
+<button class="full-btn" onclick="salvarCliente()">SALVAR CLIENTE</button>
 </div>
 </div>
 <!-- ===== PERFIL DO CLIENTE ===== -->
@@ -540,7 +557,7 @@
 <span class="form-section-label">ORÇAMENTOS</span>
 <span class="section-link">VER TODOS</span>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('pendente')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Instalação de quadro elétrico</div>
 <div class="orc-hist-data">26/06/2026</div>
@@ -550,7 +567,7 @@
 <span class="orc-hist-badge" style="background:#fff7ed;color:#92400e;border:1.5px solid #f59e0b;">PENDENTE</span>
 </div>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('pago')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Troca de fiação – sala</div>
 <div class="orc-hist-data">10/05/2026</div>
@@ -560,7 +577,7 @@
 <span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
 </div>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('pago')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Instalação de ar-condicionado</div>
 <div class="orc-hist-data">02/03/2026</div>
@@ -570,7 +587,7 @@
 <span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
 </div>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('pago')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Revisão quadro de luz</div>
 <div class="orc-hist-data">15/01/2026</div>
@@ -580,7 +597,7 @@
 <span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
 </div>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('aprovado')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Passagem de fiação – quarto</div>
 <div class="orc-hist-data">08/11/2025</div>
@@ -597,7 +614,7 @@
 <div class="screen" id="screen-notificacoes">
 <div class="topbar">
 <div class="topbar-row">
-<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<button class="back-btn" onclick="goTo('screen-home')" aria-label="Voltar">←</button>
 <span class="topbar-title">Notificações</span>
 <span style="width:28px;"></span>
 </div>
@@ -724,14 +741,14 @@
 </div>
 <div class="dual-btns">
 <button class="dual-btn" onclick="goTo('screen-orcamento')">EDITAR</button>
-<button class="dual-btn primary">COBRAR AGORA</button>
+<button id="orc-det-cobrar-btn" class="dual-btn primary">COBRAR AGORA</button>
 </div>
 </div>
 <!-- ===== PERFIL ELETRICISTA ===== -->
 <div class="screen" id="screen-perfil-eletricista">
 <div class="topbar">
 <div class="topbar-row">
-<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<button class="back-btn" onclick="goTo('screen-home')" aria-label="Voltar">←</button>
 <span class="topbar-title">Meu Perfil</span>
 <span style="width:28px;"></span>
 </div>
@@ -782,7 +799,7 @@
 <div class="screen" id="screen-relatorio">
 <div class="topbar">
 <div class="topbar-row">
-<button class="back-btn" onclick="goTo('screen-home')">←</button>
+<button class="back-btn" onclick="goTo('screen-home')" aria-label="Voltar">←</button>
 <span class="topbar-title">Relatório</span>
 <span style="width:28px;"></span>
 </div>
@@ -790,12 +807,12 @@
 <div class="scroll-body">
 <div class="sub-label">RESUMO – JUNHO 2026</div>
 <div class="rel-summary-row">
-<div class="rel-card"><div class="rel-label">FATURADO</div><div class="rel-val green">R$ 8.650,00</div></div>
-<div class="rel-card"><div class="rel-label">EM ABERTO</div><div class="rel-val red">R$ 1.900,00</div></div>
+<div class="rel-card"><div class="rel-label">FATURADO</div><div class="rel-val green" id="rel-faturado">R$ 0,00</div></div>
+<div class="rel-card"><div class="rel-label">EM ABERTO</div><div class="rel-val red" id="rel-aberto">R$ 0,00</div></div>
 </div>
 <div class="rel-summary-row" style="margin-top:8px;">
-<div class="rel-card"><div class="rel-label">ORÇAMENTOS</div><div class="rel-val">12</div></div>
-<div class="rel-card"><div class="rel-label">APROVADOS</div><div class="rel-val green">9</div></div>
+<div class="rel-card"><div class="rel-label">PAGAMENTOS</div><div class="rel-val" id="rel-orc-count">0</div></div>
+<div class="rel-card"><div class="rel-label">PAGOS</div><div class="rel-val green" id="rel-orc-aprovados">0</div></div>
 </div>
 <div class="section-header" style="margin-top:20px;">
 <span class="section-label">RECEITA MENSAL</span>
@@ -827,6 +844,17 @@
 <div class="top-cli-val">R$ 1.580,00</div>
 </div>
 <div style="height:16px;"></div>
+</div>
+</div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="confirm-modal" class="confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-msg">
+<div class="confirm-box">
+<div class="confirm-msg" id="confirm-msg">Tem certeza?</div>
+<div class="confirm-btns">
+<button class="confirm-btn" onclick="confirmCancel()" aria-label="Cancelar ação">CANCELAR</button>
+<button class="confirm-btn danger" onclick="confirmOk()" aria-label="Confirmar ação">CONFIRMAR</button>
 </div>
 </div>
 </div>
