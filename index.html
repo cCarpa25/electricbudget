@@ -557,7 +557,7 @@
 <span class="form-section-label">ORÇAMENTOS</span>
 <span class="section-link">VER TODOS</span>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('pendente')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Instalação de quadro elétrico</div>
 <div class="orc-hist-data">26/06/2026</div>
@@ -567,7 +567,7 @@
 <span class="orc-hist-badge" style="background:#fff7ed;color:#92400e;border:1.5px solid #f59e0b;">PENDENTE</span>
 </div>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('pago')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Troca de fiação – sala</div>
 <div class="orc-hist-data">10/05/2026</div>
@@ -577,7 +577,7 @@
 <span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
 </div>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('pago')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Instalação de ar-condicionado</div>
 <div class="orc-hist-data">02/03/2026</div>
@@ -587,7 +587,7 @@
 <span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
 </div>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('pago')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Revisão quadro de luz</div>
 <div class="orc-hist-data">15/01/2026</div>
@@ -597,7 +597,7 @@
 <span class="orc-hist-badge" style="background:#f0fdf4;color:#166534;border:1.5px solid #22c55e;">PAGO</span>
 </div>
 </div>
-<div class="orc-hist-row" onclick="goTo('screen-orcamento-detalhe')">
+<div class="orc-hist-row" onclick="abrirOrcDetalhe('aprovado')">
 <div class="orc-hist-left">
 <div class="orc-hist-nome">Passagem de fiação – quarto</div>
 <div class="orc-hist-data">08/11/2025</div>
@@ -741,7 +741,7 @@
 </div>
 <div class="dual-btns">
 <button class="dual-btn" onclick="goTo('screen-orcamento')">EDITAR</button>
-<button class="dual-btn primary">COBRAR AGORA</button>
+<button id="orc-det-cobrar-btn" class="dual-btn primary">COBRAR AGORA</button>
 </div>
 </div>
 <!-- ===== PERFIL ELETRICISTA ===== -->

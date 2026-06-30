@@ -590,6 +590,19 @@ function adicionarMatOrc(i) {
   goTo('screen-orcamento');
 }
 
+var _orcDetalheStatus = 'pendente';
+
+function abrirOrcDetalhe(status) {
+  _orcDetalheStatus = status || 'pendente';
+  var btn = document.getElementById('orc-det-cobrar-btn');
+  if (btn) {
+    var labels = { pendente: 'COBRAR AGORA', atrasado: 'ENVIAR AVISO', pago: 'VER RECIBO', aprovado: 'COBRAR AGORA' };
+    btn.textContent = labels[status] || 'COBRAR AGORA';
+    btn.style.display = '';
+  }
+  goTo('screen-orcamento-detalhe');
+}
+
 function goTo(id) {
   var prev = document.querySelector('.screen.active');
   if (prev) _prevScreen = prev.id;
