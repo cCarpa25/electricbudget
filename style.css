@@ -190,6 +190,8 @@
   .mat-nome { font-size: 14px; font-weight: 700; }
   .mat-unit { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.3px; }
   .mat-price { font-size: 14px; font-weight: 700; color: #15803d; text-align: right; }
+  .mat-edit-btn { background: none; border: none; font-size: 16px; color: #888; cursor: pointer; padding: 2px 4px; line-height: 1; }
+  .mat-edit-btn:hover { color: #1e293b; }
   .slider-row { display: flex; align-items: center; gap: 8px; margin: 10px 0 14px; }
   .slider-row input[type=range] { flex: 1; accent-color: #333; }
   .slider-arrow { font-size: 16px; color: #999; cursor: pointer; user-select: none; }
@@ -493,14 +495,35 @@
     margin-bottom: 16px;
 }
 
+  .cal-nav-row  {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+  .cal-nav-btn  {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    padding: 0 6px;
+    line-height: 1;
+}
+
+  .cal-nav-btn:hover  {
+    color: #1e293b;
+}
+
   .cal-month-label  {
     font-size: 14px;
     font-weight: 700;
     text-align: center;
     color: #333;
-    margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 0.4px;
+    flex: 1;
 }
 
   .cal-header-row  {

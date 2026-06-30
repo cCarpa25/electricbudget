@@ -336,6 +336,8 @@ var materiais = [
   { nome: 'Caixa de Passagem 4x4',   unit: 'unidade',  preco: 5.60,  cat: 'OUTROS' }
 ];
 
+var _matEditIdx = -1;
+
 function renderMateriais() {
   var list = document.getElementById('mat-list');
   if (!list) return;
@@ -356,9 +358,44 @@ function renderMateriais() {
 
   var unitLabel = { metro: 'POR METRO', unidade: 'POR UNIDADE', pacote: 'POR PACOTE', kg: 'POR KG', rolo: 'POR ROLO' };
   list.innerHTML = items.map(function(m) {
+    var realIdx = materiais.indexOf(m);
     var preco = 'R$ ' + m.preco.toFixed(2).replace('.', ',');
-    return '<div class="mat-row"><div><div class="mat-nome">' + m.nome + '</div><div class="mat-unit">' + (unitLabel[m.unit] || 'POR ' + m.unit.toUpperCase()) + '</div></div><div class="mat-price">' + preco + '</div></div>';
+    return '<div class="mat-row">'
+      + '<div><div class="mat-nome">' + m.nome + '</div><div class="mat-unit">' + (unitLabel[m.unit] || 'POR ' + m.unit.toUpperCase()) + '</div></div>'
+      + '<div style="display:flex;align-items:center;gap:10px;">'
+      + '<div class="mat-price">' + preco + '</div>'
+      + '<button class="mat-edit-btn" onclick="event.stopPropagation();editarMaterial(' + realIdx + ')">✎</button>'
+      + '</div></div>';
   }).join('');
+}
+
+function novoMaterial() {
+  _matEditIdx = -1;
+  document.getElementById('mat-nome-input').value = '';
+  document.getElementById('mat-preco-input').value = '';
+  document.getElementById('mat-unid-input').value = 'unidade';
+  document.querySelectorAll('#mat-cat-row .filter-chip').forEach(function(c) { c.classList.remove('active'); });
+  document.querySelector('#mat-cat-row .filter-chip').classList.add('active');
+  document.getElementById('mat-erro').style.display = 'none';
+  var t = document.getElementById('mat-form-title');
+  if (t) t.textContent = 'Novo Material';
+  goTo('screen-novo-material');
+}
+
+function editarMaterial(idx) {
+  var m = materiais[idx];
+  if (!m) return;
+  _matEditIdx = idx;
+  document.getElementById('mat-nome-input').value = m.nome;
+  document.getElementById('mat-preco-input').value = m.preco;
+  document.getElementById('mat-unid-input').value = m.unit;
+  document.querySelectorAll('#mat-cat-row .filter-chip').forEach(function(c) {
+    c.classList.toggle('active', c.textContent === m.cat);
+  });
+  document.getElementById('mat-erro').style.display = 'none';
+  var t = document.getElementById('mat-form-title');
+  if (t) t.textContent = 'Editar Material';
+  goTo('screen-novo-material');
 }
 
 function filterMateriais(el) {
@@ -393,15 +430,21 @@ function salvarMaterial() {
   }
 
   erro.style.display = 'none';
-  materiais.push({ nome: nome, unit: unid, preco: preco, cat: cat });
+
+  if (_matEditIdx >= 0) {
+    materiais[_matEditIdx] = { nome: nome, unit: unid, preco: preco, cat: cat };
+    _matEditIdx = -1;
+    showToast('Material atualizado!');
+  } else {
+    materiais.push({ nome: nome, unit: unid, preco: preco, cat: cat });
+    showToast('Material salvo com sucesso!');
+  }
 
   document.getElementById('mat-nome-input').value = '';
   document.getElementById('mat-preco-input').value = '';
   document.getElementById('mat-unid-input').value = 'unidade';
   document.querySelectorAll('#mat-cat-row .filter-chip').forEach(function(c) { c.classList.remove('active'); });
   document.querySelector('#mat-cat-row .filter-chip').classList.add('active');
-
-  showToast('Material salvo com sucesso!');
   goTo('screen-materiais');
 }
 
@@ -638,14 +681,30 @@ function toggleSwitch(el) {
   el.classList.toggle('on');
 }
 
+var _calNow = new Date();
+var _calYear = _calNow.getFullYear();
+var _calMonth = _calNow.getMonth();
+
+function calPrev() {
+  _calMonth--;
+  if (_calMonth < 0) { _calMonth = 11; _calYear--; }
+  renderCalendar();
+}
+
+function calNext() {
+  _calMonth++;
+  if (_calMonth > 11) { _calMonth = 0; _calYear++; }
+  renderCalendar();
+}
+
 function renderCalendar() {
   var container = document.getElementById('agenda-cal');
   if (!container) return;
 
-  var year = 2026, month = 5;
+  var year = _calYear, month = _calMonth;
   var monthNames = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
   var dayNames = ['D','S','T','Q','Q','S','S'];
-  var today = 30;
+  var now = new Date();
   var mesStr = year + '-' + (month + 1 < 10 ? '0' + (month + 1) : month + 1);
   var eventDays = agendamentos
     .filter(function(a) { return a.data.indexOf(mesStr) === 0; })
@@ -654,7 +713,11 @@ function renderCalendar() {
   var firstDay = new Date(year, month, 1).getDay();
   var daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  var html = '<div class="cal-month-label">' + monthNames[month] + ' ' + year + '</div>';
+  var html = '<div class="cal-nav-row">'
+    + '<button class="cal-nav-btn" onclick="calPrev()">&#8249;</button>'
+    + '<span class="cal-month-label">' + monthNames[month] + ' ' + year + '</span>'
+    + '<button class="cal-nav-btn" onclick="calNext()">&#8250;</button>'
+    + '</div>';
   html += '<div class="cal-header-row">';
   dayNames.forEach(function(d) { html += '<div class="cal-day-header">' + d + '</div>'; });
   html += '</div><div class="cal-grid">';
@@ -665,7 +728,7 @@ function renderCalendar() {
 
   for (var d = 1; d <= daysInMonth; d++) {
     var cls = 'cal-day';
-    if (d === today) cls += ' today';
+    if (year === now.getFullYear() && month === now.getMonth() && d === now.getDate()) cls += ' today';
     if (eventDays.indexOf(d) !== -1) cls += ' has-event';
     html += '<div class="' + cls + '">' + d + '</div>';
   }
